@@ -6,12 +6,25 @@
   pre_tasks:
 
 
-  - name: install updates (ubuntu)
+  - name: update repo cache (ubuntu)
     tags: always
     apt: 
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Ubuntu"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+
+
+   - name: add ssh key for jimbo
+     tags: always
+     authorized_key:
+      user: jimbo
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBkmcvQ8HWKoaMuERNHMMxGXCh0q017yF5sIWh0DXkSQ ansible"
 
 
 
@@ -39,4 +52,10 @@
        owner: root
        group: root
        mode: 0644
+
+
+
+
+
+
 

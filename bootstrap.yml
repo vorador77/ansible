@@ -1,0 +1,49 @@
+---
+
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+
+  - name: install updates (ubuntu)
+    tags: always
+    apt: 
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+- hosts: all
+  become: true
+  tasks:
+
+
+   - name: create jimbo user (ansible service account)
+     tags: always
+     user:
+      name: jimbo
+      groups: root
+
+   - name: add ssh key for jimbo
+     tags: always
+     authorized_key:
+      user: jimbo
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBkmcvQ8HWKoaMuERNHMMxGXCh0q017yF5sIWh0DXkSQ ansible"
+
+
+   - name: add sudoers file for jimbo
+     tags: always
+     copy:
+      src: sudoer_jimbo
+      dest: /etc/sudoers.d/jimbo
+      owner: root
+      group: root
+      mode: 0440
+
+
+
+
+
+
+
