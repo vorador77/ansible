@@ -4,58 +4,37 @@
 - hosts: all
   become: true
   pre_tasks:
-
-
-  - name: update repo cache (ubuntu)
+ 
+  - name: update repository index (CentOS)
     tags: always
-    apt: 
+    dnf:
+      update_cache: yes
+    changed_when: false
+    when: ansible_distribution == "CentOS"
+ 
+  - name: update repository index (Ubuntu)
+    tags: always
+    apt:
       update_cache: yes
     changed_when: false
     when: ansible_distribution == "Ubuntu"
-
-
+ 
 - hosts: all
   become: true
-  tasks:
-
-
-
-   - name: add ssh key for jimbo
-     tags: always
-     authorized_key:
-      user: jimbo
-      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBkmcvQ8HWKoaMuERNHMMxGXCh0q017yF5sIWh0DXkSQ ansible"
-
-
-
-
-- hosts: web_servers 
+  roles:
+    - base
+ 
+- hosts: web_servers
   become: true
-  tasks:
-
-
-   - name: install apache2 and php packages for Ubuntu
-     tags: apache, apache2, ubuntu
-     apt:
-       name:
-         - apache2
-         - libapache2-mod-php
-       state: latest
-     when: ansible_distribution == "Ubuntu"
-
-
-   - name: copy default html file for site
-     tags: apache, apache2, httpd
-     copy: 
-       src: default_site.html
-       dest: /var/www/html/index.html
-       owner: root
-       group: root
-       mode: 0644
-
-
-
-
-
-
-
+  roles:
+    - web_servers
+ 
+- hosts: db_servers
+  become: true
+  roles:
+    - db_servers
+ 
+- hosts: file_servers
+  become: true
+  roles:
+    - file_servers

@@ -1,0 +1,5 @@
+- name: add ssh key for jimbo
+  authorized_key:
+    user: jimbo
+    key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIBkmcvQ8HWKoaMuERNHMMxGXCh0q017yF5sIWh0DXkSQ ansible"
+
